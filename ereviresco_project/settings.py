@@ -12,8 +12,8 @@ SECRET_KEY = 'django-insecure-change-this-in-production-ereviresco-2026'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
-
+ALLOWED_HOSTS = ['.onrender.com', 'localhost', '127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['https://*.onrender.com']
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
