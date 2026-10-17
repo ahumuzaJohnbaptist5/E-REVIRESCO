@@ -55,6 +55,7 @@ class Article(models.Model):
     slug = models.SlugField(max_length=220, unique=True)
     category = models.CharField(max_length=80, default='E-Waste Awareness')
     summary = models.CharField(max_length=320)
+    source_url = models.URLField(blank=True, default='', help_text='Optional link to the original source or further reading.')
     content = models.TextField(help_text='Article body. Separate paragraphs with blank lines.')
     author = models.CharField(max_length=100, blank=True, default='E-REVIRESCO Team')
     is_published = models.BooleanField(default=False)
