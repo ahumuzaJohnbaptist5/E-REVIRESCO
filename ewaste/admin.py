@@ -20,3 +20,14 @@ class AssessmentAdmin(admin.ModelAdmin):
 @admin.register(CollectionRequest)
 class CollectionRequestAdmin(admin.ModelAdmin):
     list_display = ('customer', 'location', 'requested_date', 'status')
+
+from .models import Article
+
+@admin.register(Article)
+class ArticleAdmin(admin.ModelAdmin):
+    list_display = ('title', 'category', 'is_published', 'published_at', 'updated_at')
+    list_filter = ('is_published', 'category')
+    search_fields = ('title', 'summary', 'content')
+    prepopulated_fields = {'slug': ('title',)}
+    list_editable = ('is_published',)
+    ordering = ('-created_at',)
