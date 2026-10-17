@@ -49,3 +49,21 @@ class CollectionRequest(models.Model):
     status = models.CharField(max_length=50, default="Pending")
     
     def __str__(self): return f"Collection for {self.customer.name} at {self.location}"
+
+class Article(models.Model):
+    title = models.CharField(max_length=200)
+    slug = models.SlugField(max_length=220, unique=True)
+    category = models.CharField(max_length=80, default='E-Waste Awareness')
+    summary = models.CharField(max_length=320)
+    content = models.TextField(help_text='Article body. Separate paragraphs with blank lines.')
+    author = models.CharField(max_length=100, blank=True, default='E-REVIRESCO Team')
+    is_published = models.BooleanField(default=False)
+    published_at = models.DateTimeField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-published_at', '-created_at']
+
+    def __str__(self):
+        return self.title
