@@ -193,6 +193,7 @@ footer a{display:block;margin:7px 0;}
 <div class="menu-dropdown"><button>Services</button><div class="dropdown-content"><a href="#submit">Submit E-Waste</a><a href="#collection">Request Collection</a><a href="#repair">Repair & Refurbishment</a><a href="#security">Data Security</a></div></div>
 <div class="menu-dropdown"><button>Traceability</button><div class="dropdown-content"><a href="#track">Track My E-Waste</a><a href="#process">Our Process</a><a href="#locations">Collection Points</a></div></div>
 <a href="#partners">Partners</a>
+<a href="/articles/">Articles</a>
 <a href="#awareness">Awareness</a>
 <a href="#impact">Impact</a>
 <a href="#about">About</a>
@@ -212,7 +213,7 @@ footer a{display:block;margin:7px 0;}
 <a href="#partners" onclick="closeMobileMenu()">Our Partners</a>
 <a href="#partner-form" onclick="closeMobileMenu()">Become a Partner</a>
 <a href="#awareness" onclick="closeMobileMenu()">Awareness</a>
-<a href="#articles" onclick="closeMobileMenu()">Articles</a>
+<a href="/articles/" onclick="closeMobileMenu()">Articles</a>
 <a href="#impact" onclick="closeMobileMenu()">Impact</a>
 <a href="#about" onclick="closeMobileMenu()">About E-REVIRESCO</a>
 <a href="#contact" onclick="closeMobileMenu()">Contact</a>
@@ -474,16 +475,23 @@ footer a{display:block;margin:7px 0;}
 <div class="section-head">
 <div class="eyebrow">E-REVIRESCO Journal</div>
 <h2>Articles, guides and e-waste intelligence.</h2>
-<p>A future content hub for publishing practical information and documenting developments in e-waste management.</p>
+<p>Read practical e-waste guidance, public awareness articles, Uganda updates and news about responsible electronics recovery.</p>
 </div>
 <div class="awareness-grid">
-<div class="article-card"><div class="tag">Global</div><h3>The Global E-Waste Problem</h3><p>Why electronic waste continues to increase and why formal collection and recovery matter.</p><br><button class="btn light" onclick="openArticle('Global E-Waste Problem')">Read Article</button></div>
-<div class="article-card"><div class="tag">Uganda</div><h3>Uganda's E-Waste Response</h3><p>Government initiatives, collection systems, awareness campaigns, repair, reuse and responsible disposal.</p><br><button class="btn light" onclick="openArticle('Uganda E-Waste Response')">Read Article</button></div>
-<div class="article-card"><div class="tag">Practical Guide</div><h3>What Should You Do With an Old Computer?</h3><p>A practical guide covering data security, assessment, repair, reuse and responsible downstream handling.</p><br><button class="btn light" onclick="openArticle('Old Computer Guide')">Read Guide</button></div>
-<div class="article-card"><div class="tag">Data Security</div><h3>Why Formatting Is Not Enough</h3><p>An introduction to responsible handling of data-bearing devices before reuse, transfer or disposal.</p><br><button class="btn light" onclick="openArticle('Data Security Guide')">Read Guide</button></div>
-<div class="article-card"><div class="tag">Innovation</div><h3>Who Is Doing What?</h3><p>A directory of government agencies, recyclers, technology businesses and initiatives involved in e-waste.</p><br><button class="btn light" onclick="openArticle('Who Is Doing What')">Explore</button></div>
-<div class="article-card"><div class="tag">E-REVIRESCO</div><h3>Project Updates</h3><p>Future updates on collections, partnerships, pilot results, impact and new services.</p><br><button class="btn light" onclick="openArticle('Project Updates')">View Updates</button></div>
+{% for article in recent_articles %}
+<div class="article-card">
+<div class="tag">{{ article.category }}</div>
+<h3>{{ article.title }}</h3>
+<p>{{ article.summary }}</p><br>
+<a class="btn light" href="{% url 'article_detail' article.slug %}">Read Article</a>
 </div>
+{% empty %}
+<div class="article-card"><div class="tag">Public Guide</div><h3>What happens to e-waste?</h3><p>Learn why old electronics should be assessed and sent through responsible recovery pathways.</p><br><a class="btn light" href="/articles/">Explore Articles</a></div>
+<div class="article-card"><div class="tag">Data Security</div><h3>Protect your data before disposal</h3><p>Understand the importance of securely handling phones, computers and storage devices.</p><br><a class="btn light" href="/articles/">Explore Articles</a></div>
+<div class="article-card"><div class="tag">Uganda</div><h3>Building e-waste awareness</h3><p>Find public information and project updates about collection, repair, reuse and recycling.</p><br><a class="btn light" href="/articles/">Explore Articles</a></div>
+{% endfor %}
+</div>
+<div style="margin-top:28px"><a class="btn green" href="/articles/">Visit All Articles</a></div>
 </div>
 </section>
 
@@ -559,16 +567,6 @@ footer a{display:block;margin:7px 0;}
 <div class="footer-bottom">© 2026 PROJECT E-REVIRESCO. Recover • Reuse • Restore.</div>
 </div>
 </footer>
-
-<!-- ================= ARTICLE MODAL ================= -->
-<div class="modal" id="articleModal">
-<div class="modal-box">
-<button class="modal-close" onclick="closeArticle()">×</button>
-<div class="eyebrow">E-REVIRESCO Journal</div>
-<h2 id="articleTitle" style="margin:8px 0 15px">Article</h2>
-<p id="articleContent" style="color:var(--muted);font-size:14px"></p>
-</div>
-</div>
 
 <script>
 /* MOBILE MENU */
@@ -669,25 +667,6 @@ function partnerSubmit(event) {
     event.target.reset();
 }
 
-/* ARTICLES */
-function openArticle(title) {
-    const modal = document.getElementById("articleModal");
-    const titleBox = document.getElementById("articleTitle");
-    const content = document.getElementById("articleContent");
-    const articles = {
-        "Global E-Waste Problem": "Electronic waste is one of the fastest-growing waste streams globally. The awareness section of the platform explains the scale of the problem, formal collection, recovery, resource value, and environmental risks.",
-        "Uganda E-Waste Response": "Uganda is developing collection, awareness, reuse, repair, refurbishment, data-security, and responsible-disposal approaches. E-REVIRESCO complements existing efforts through digital collection, coordination, and traceability.",
-        "Old Computer Guide": "Before an old computer is discarded, identify whether it contains recoverable value, determine whether it contains data, secure the data-bearing components, assess its technical condition, and select an appropriate downstream pathway.",
-        "Data Security Guide": "Data-bearing devices require controlled handling. Depending on the medium, appropriate secure erasure, cryptographic erasure, or physical destruction may be used, followed by verification and documentation.",
-        "Who Is Doing What": "The E-REVIRESCO knowledge directory documents government agencies, collection initiatives, repair businesses, formal recyclers, specialist handlers, technology organisations, and international initiatives.",
-        "Project Updates": "This section publishes pilot results, collection statistics, partner announcements, technical developments, awareness activities, and impact reports."
-    };
-    titleBox.textContent = title;
-    content.textContent = articles[title] || "Article content will be published here.";
-    modal.classList.add("open");
-}
-function closeArticle() {document.getElementById("articleModal").classList.remove("open");}
-document.getElementById("articleModal").addEventListener("click", function(event) {if(event.target === this) closeArticle();});
 </script>
 </body>
 </html>
