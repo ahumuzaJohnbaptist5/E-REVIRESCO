@@ -1,11 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST, require_GET
 from rest_framework import viewsets
 import json
 
-from .models import Customer, Submission, CollectionRequest, Item, Assessment
+from .models import Customer, Submission, CollectionRequest, Item, Assessment, Article
 from .serializers import (
     CustomerSerializer, SubmissionSerializer, 
     CollectionRequestSerializer, ItemSerializer, AssessmentSerializer
@@ -14,7 +14,19 @@ from .serializers import (
 # --- FRONTEND & FORM API VIEWS ---
 
 def home(request):
-    return render(request, 'index.html')
+    recent_articles = Article.objects.filter(is_published=True).order_by('-published_at', '-created_at')[:3]
+    return render(request, 'index.html', {'recent_articles': recent_articles})
+
+
+def article_list(request):
+    articles = Article.objects.filter(is_published=True).order_by('-published_at', '-created_at')
+    return render(request, 'articles.html', {'articles': articles})
+
+
+def article_detail(request, slug):
+    article = get_object_or_404(Article, slug=slug, is_published=True)
+    related_articles = Article.objects.filter(is_published=True, category=article.category).exclude(pk=article.pk).order_by('-published_at', '-created_at')[:3]
+    return render(request, 'article_detail.html', {'article': article, 'related_articles': related_articles})
 
 @csrf_exempt
 @require_POST
