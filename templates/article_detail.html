@@ -13,7 +13,7 @@
 <body>
 <nav class="nav"><div class="container"><a class="logo" href="/">PROJECT E-<span>REVIRESCO</span></a><a class="back" href="{% url 'article_list' %}">All articles</a></div></nav>
 <main class="container">
-<article><div class="tag">{{ article.category }}</div><h1 class="title">{{ article.title }}</h1><div class="meta">By {{ article.author }}{% if article.published_at %} · {{ article.published_at|date:"j F Y" }}{% endif %}</div><p class="summary">{{ article.summary }}</p><div class="body">{{ article.content|linebreaks }}</div></article>
+<article><div class="tag">{{ article.category }}</div><h1 class="title">{{ article.title }}</h1><div class="meta">By {{ article.author }}{% if article.published_at %} · {{ article.published_at|date:"j F Y" }}{% endif %}</div><p class="summary">{{ article.summary }}</p><div class="body">{{ article.content|linebreaks }}</div>{% if article.source_url %}<p class="meta">Source / further reading: <a href="{{ article.source_url }}" target="_blank" rel="noopener noreferrer" style="color:var(--green);text-decoration:underline">Read the original article ↗</a></p>{% endif %}</article>
 {% if related_articles %}<section class="related"><h2>Related articles</h2><div class="related-grid">{% for related in related_articles %}<article class="related-card"><strong>{{ related.title }}</strong><p>{{ related.summary }}</p><a href="{% url 'article_detail' related.slug %}">Read article →</a></article>{% endfor %}</div></section>{% endif %}
 </main>
 <footer><div class="container">© 2026 PROJECT E-REVIRESCO · Recover • Reuse • Restore</div></footer>
