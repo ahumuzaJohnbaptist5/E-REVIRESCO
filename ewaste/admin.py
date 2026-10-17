@@ -28,6 +28,7 @@ class ArticleAdmin(admin.ModelAdmin):
     list_display = ('title', 'category', 'is_published', 'published_at', 'updated_at')
     list_filter = ('is_published', 'category')
     search_fields = ('title', 'summary', 'content')
+    fields = ('title', 'slug', 'category', 'summary', 'content', 'source_url', 'author', 'is_published', 'published_at')
     prepopulated_fields = {'slug': ('title',)}
     list_editable = ('is_published',)
     ordering = ('-created_at',)
