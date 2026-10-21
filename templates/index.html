@@ -168,6 +168,17 @@ footer{background:var(--dark);color:#fff;padding:55px 0 25px;}
 footer p,footer a{color:#aab8b0;font-size:12px;}
 footer a{display:block;margin:7px 0;}
 .footer-bottom{border-top:1px solid #ffffff12;margin-top:40px;padding-top:20px;color:#819189;font-size:10px;}
+/* FOOTER PAN CONTROLS */
+.pan-controls{margin-top:28px;padding:18px 20px;border:1px solid #ffffff18;border-radius:14px;background:#ffffff08;display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.pan-control{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;min-width:0;}
+.pan-control label{margin:0;color:#d4dfd8;font-size:11px;white-space:nowrap;}
+.pan-control input[type="range"]{width:100%;margin:0;padding:0;accent-color:#7dc69a;cursor:pointer;}
+.pan-control output{font-size:10px;color:#aab8b0;min-width:42px;text-align:right;font-variant-numeric:tabular-nums;}
+.pan-hint{grid-column:1/-1;color:#819189;font-size:10px;}
+.pan-draggable{cursor:grab;touch-action:pan-y;}
+.pan-draggable.is-panning{cursor:grabbing;user-select:none;}
+@media(max-width:560px){.pan-controls{grid-template-columns:1fr;gap:14px;}.pan-hint{grid-column:auto;}}
+
 
 /* MODAL */
 .modal{display:none;position:fixed;inset:0;z-index:2000;background:rgba(8,18,13,.65);padding:20px;align-items:center;justify-content:center;}
@@ -564,11 +575,80 @@ footer a{display:block;margin:7px 0;}
 <div><div class="footer-title">Network</div><a href="#partners">Our Partners</a><a href="#partner-form">Become a Partner</a><a href="#security">Data Security</a><a href="#impact">Impact</a></div>
 <div><div class="footer-title">Knowledge</div><a href="#awareness">Awareness</a><a href="#articles">Articles</a><a href="#about">About</a><a href="#contact">Contact</a></div>
 </div>
+<section class="pan-controls" aria-label="Page pan controls">
+<div class="pan-control">
+<label for="panX">Pan X</label>
+<input id="panX" type="range" min="0" max="0" value="0" step="1" aria-label="Pan horizontally" disabled>
+<output id="panXValue" for="panX">0%</output>
+</div>
+<div class="pan-control">
+<label for="panY">Pan Y</label>
+<input id="panY" type="range" min="0" max="100" value="0" step="1" aria-label="Pan vertically">
+<output id="panYValue" for="panY">0%</output>
+</div>
+<p class="pan-hint">Use the sliders or drag the page background to pan. Interactive elements remain usable.</p>
+</section>
 <div class="footer-bottom">© 2026 PROJECT E-REVIRESCO. Recover • Reuse • Restore.</div>
 </div>
 </footer>
 
 <script>
+/* FOOTER PAN CONTROLS + DRAG TO PAN */
+(function initPanControls(){
+    const panX = document.getElementById('panX');
+    const panY = document.getElementById('panY');
+    const panXValue = document.getElementById('panXValue');
+    const panYValue = document.getElementById('panYValue');
+    if (!panX || !panY) return;
+
+    function updatePanRanges(){
+        const maxX = Math.max(0, document.documentElement.scrollWidth - window.innerWidth);
+        const maxY = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+        panX.max = String(maxX);
+        panX.disabled = maxX === 0;
+        panX.value = String(Math.min(window.scrollX, maxX));
+        panY.value = String(maxY ? Math.round((window.scrollY / maxY) * 100) : 0);
+        panXValue.textContent = maxX ? Math.round((window.scrollX / maxX) * 100) + '%' : '0%';
+        panYValue.textContent = panY.value + '%';
+    }
+    panX.addEventListener('input', () => {
+        window.scrollTo({left:Number(panX.value), top:window.scrollY, behavior:'auto'});
+        panXValue.textContent = (Number(panX.value) && Number(panX.max) ? Math.round(Number(panX.value) / Number(panX.max) * 100) : 0) + '%';
+    });
+    panY.addEventListener('input', () => {
+        const maxY = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+        window.scrollTo({left:window.scrollX, top:maxY * Number(panY.value) / 100, behavior:'auto'});
+        panYValue.textContent = panY.value + '%';
+    });
+    window.addEventListener('scroll', updatePanRanges, {passive:true});
+    window.addEventListener('resize', updatePanRanges);
+    if ('ResizeObserver' in window) new ResizeObserver(updatePanRanges).observe(document.body);
+    updatePanRanges();
+
+    let drag = null;
+    document.addEventListener('pointerdown', event => {
+        if (event.button !== 0 || event.target.closest('a,button,input,select,textarea,label,form,footer,.modal,.navbar,.mobile-menu,[contenteditable="true"]')) return;
+        drag = {id:event.pointerId, x:event.clientX, y:event.clientY, sx:window.scrollX, sy:window.scrollY, moved:false};
+    });
+    document.addEventListener('pointermove', event => {
+        if (!drag || event.pointerId !== drag.id) return;
+        const dx = event.clientX - drag.x;
+        const dy = event.clientY - drag.y;
+        if (!drag.moved && Math.hypot(dx,dy) < 5) return;
+        drag.moved = true;
+        document.body.classList.add('is-panning');
+        window.scrollTo(drag.sx - dx, drag.sy - dy);
+        event.preventDefault();
+    }, {passive:false});
+    function endDrag(event){
+        if (!drag || (event && event.pointerId !== drag.id)) return;
+        drag = null;
+        document.body.classList.remove('is-panning');
+    }
+    document.addEventListener('pointerup', endDrag);
+    document.addEventListener('pointercancel', endDrag);
+})();
+ 
 /* MOBILE MENU */
 function toggleMobileMenu(){document.getElementById("mobileMenu").classList.toggle("open");}
 function closeMobileMenu(){document.getElementById("mobileMenu").classList.remove("open");}
