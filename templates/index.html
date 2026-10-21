@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PROJECT E-REVIRESCO | Recover • Reuse • Restore</title>
+
+<style>
+:root{
+    --green:#2f7d57;
+    --green-dark:#205b3e;
+    --green-soft:#e5f2e9;
+    --dark:#102018;
+    --dark-2:#172820;
+    --cream:#f5f7f3;
+    --white:#ffffff;
+    --text:#17251e;
+    --muted:#68766e;
+    --line:#dce6df;
+    --gold:#c59b45;
+    --danger:#b84a4a;
+    --shadow:0 18px 50px rgba(16,32,24,.08);
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:Inter,Arial,Helvetica,sans-serif;background:var(--cream);color:var(--text);line-height:1.6;}
+body.menu-open{overflow:hidden;}
+a{color:inherit;text-decoration:none;}
+button,input,select,textarea{font:inherit;}
+button{cursor:pointer;}
+.container{width:min(1200px,calc(100% - 40px));margin:auto;}
+.section{padding:90px 0;}
+.section-head{max-width:750px;margin-bottom:42px;}
+.eyebrow{color:var(--green);font-size:11px;font-weight:900;letter-spacing:.18em;text-transform:uppercase;}
+.section-head h2{font-size:clamp(32px,4vw,48px);line-height:1.08;letter-spacing:-.04em;margin:9px 0 15px;}
+.section-head p{color:var(--muted);}
+
+/* NAVIGATION */
+.navbar{position:sticky;top:0;z-index:1000;background:rgba(245,247,243,.95);backdrop-filter:blur(18px);border-bottom:1px solid var(--line);}
+.nav-inner{height:76px;display:flex;align-items:center;justify-content:space-between;}
+.logo{font-size:17px;font-weight:950;letter-spacing:.075em;white-space:nowrap;}
+.logo span{color:var(--green);}
+.desktop-menu{display:flex;align-items:center;gap:19px;}
+.desktop-menu > a,.menu-dropdown > button{border:0;background:none;color:var(--text);font-size:12px;font-weight:800;padding:9px 0;}
+.desktop-menu > a:hover,.menu-dropdown > button:hover{color:var(--green);}
+.menu-dropdown{position:relative;}
+.dropdown-content{display:none;position:absolute;top:34px;right:-20px;width:230px;background:#fff;border:1px solid var(--line);border-radius:13px;box-shadow:var(--shadow);padding:8px;}
+.menu-dropdown:hover .dropdown-content{display:block;}
+.dropdown-content a{display:block;padding:10px 12px;border-radius:8px;font-size:12px;font-weight:700;}
+.dropdown-content a:hover{background:var(--green-soft);color:var(--green-dark);}
+.nav-cta{background:var(--dark)!important;color:#fff!important;padding:10px 14px!important;border-radius:8px;}
+.mobile-toggle{display:none;width:42px;height:42px;border:1px solid var(--line);border-radius:9px;background:#fff;font-size:20px;}
+.mobile-menu{display:none;position:fixed;inset:76px 0 0;z-index:999;background:var(--cream);overflow-y:auto;padding:25px 20px 50px;}
+.mobile-menu.open{display:block;}
+.mobile-menu a,.mobile-menu button{display:block;width:100%;text-align:left;border:0;background:none;padding:15px 5px;border-bottom:1px solid var(--line);font-size:15px;font-weight:800;}
+.mobile-submenu{display:none;padding-left:15px;}
+.mobile-submenu.open{display:block;}
+.mobile-submenu a{font-size:13px;font-weight:600;}
+
+/* HERO */
+.hero{padding:90px 0 85px;}
+.hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:65px;align-items:center;}
+.hero h1{font-size:clamp(44px,6vw,78px);line-height:.99;letter-spacing:-.055em;margin:15px 0 24px;}
+.hero h1 span{color:var(--green);}
+.hero-text{max-width:680px;font-size:18px;color:var(--muted);}
+.hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px;}
+.btn{display:inline-flex;justify-content:center;align-items:center;border:0;border-radius:9px;padding:13px 19px;background:var(--dark);color:#fff;font-size:13px;font-weight:850;}
+.btn.green{background:var(--green);}
+.btn.light{background:#fff;color:var(--dark);border:1px solid var(--line);}
+.btn:hover{transform:translateY(-1px);}
+
+/* TRACE CARD */
+.trace-card{background:var(--dark);color:#fff;border-radius:28px;padding:30px;box-shadow:0 28px 70px rgba(16,32,24,.16);}
+.trace-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:25px;}
+.trace-label{color:#9eafa5;text-transform:uppercase;letter-spacing:.14em;font-size:10px;}
+.trace-id{font-size:28px;font-weight:900;margin-top:4px;}
+.trace-status{padding:6px 9px;border-radius:20px;background:#ffffff12;color:#bfe4cd;font-size:9px;font-weight:900;}
+.trace-event{display:flex;gap:14px;padding:15px 0;border-bottom:1px solid #ffffff12;}
+.trace-event:last-child{border-bottom:0;}
+.trace-number{width:28px;height:28px;min-width:28px;display:grid;place-items:center;border-radius:50%;background:var(--green);font-size:11px;font-weight:900;}
+.trace-event strong{display:block;font-size:13px;}
+.trace-event small{display:block;color:#aabbb1;font-size:10px;margin-top:2px;}
+
+/* QUICK ACTIONS */
+.quick-actions{margin-top:-20px;position:relative;z-index:2;}
+.quick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+.quick-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:19px;box-shadow:0 10px 30px rgba(16,32,24,.06);}
+.quick-card strong{display:block;margin-bottom:5px;font-size:14px;}
+.quick-card p{color:var(--muted);font-size:11px;}
+
+/* CARDS */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:26px;box-shadow:0 10px 30px rgba(16,32,24,.035);}
+.card-number{color:var(--green);font-size:11px;font-weight:900;letter-spacing:.12em;margin-bottom:18px;}
+.card h3{font-size:20px;margin-bottom:8px;}
+.card p{color:var(--muted);font-size:13px;}
+
+/* DARK PROCESS */
+.dark-section{background:var(--dark);color:#fff;}
+.dark-section .section-head p{color:#aab8b0;}
+.process-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;}
+.process-card{min-height:135px;padding:18px;border:1px solid #ffffff12;background:#ffffff07;border-radius:15px;}
+.process-card span{color:#9ed1b2;font-size:11px;font-weight:900;}
+.process-card strong{display:block;margin-top:20px;font-size:14px;}
+
+/* TRACK */
+.track-area{background:#eaf2ed;}
+.track-box{max-width:700px;background:#fff;border:1px solid var(--line);border-radius:20px;padding:25px;box-shadow:var(--shadow);}
+.track-form{display:flex;gap:10px;}
+.track-form input{flex:1;margin:0;}
+
+/* FORMS */
+.form-layout{display:grid;grid-template-columns:.75fr 1.25fr;gap:45px;align-items:start;}
+.form-card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:28px;box-shadow:var(--shadow);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:15px;}
+label{display:block;margin-bottom:6px;font-size:11px;font-weight:900;}
+input,select,textarea{width:100%;border:1px solid var(--line);border-radius:8px;padding:12px;background:#fff;outline:none;margin-bottom:17px;font-size:13px;}
+textarea{min-height:105px;resize:vertical;}
+input:focus,select:focus,textarea:focus{border-color:var(--green);}
+.form-message{color:var(--green);font-size:12px;margin-top:12px;}
+
+/* DATA SECURITY */
+.security-box{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.security-item{background:#fff;border:1px solid var(--line);border-radius:16px;padding:23px;}
+.security-item h3{font-size:17px;margin-bottom:7px;}
+.security-item p{color:var(--muted);font-size:13px;}
+
+/* COLLECTION POINTS */
+.location-card{display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center;}
+.location-status{color:var(--green);background:var(--green-soft);padding:6px 10px;border-radius:20px;font-size:10px;font-weight:900;}
+
+/* AWARENESS */
+.awareness{background:#e9f1ec;}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:25px;}
+.stat{background:#fff;border:1px solid var(--line);border-radius:16px;padding:23px;}
+.stat strong{display:block;color:var(--green);font-size:31px;}
+.stat span{color:var(--muted);font-size:11px;}
+.awareness-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+.article-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;}
+.article-card .tag{color:var(--green);font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.12em;}
+.article-card h3{margin:9px 0;font-size:18px;}
+.article-card p{color:var(--muted);font-size:12px;}
+
+/* IMPACT */
+.impact-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.impact-panel{background:#fff;border:1px solid var(--line);border-radius:18px;padding:25px;}
+.impact-number{font-size:43px;font-weight:900;color:var(--green);}
+.progress{height:8px;background:#edf1ee;border-radius:20px;overflow:hidden;margin:15px 0;}
+.progress span{display:block;height:100%;width:68%;background:var(--green);}
+
+/* PARTNER */
+.partner-options{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;}
+.partner-option{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;}
+.partner-option h3{font-size:16px;margin-bottom:7px;}
+.partner-option p{color:var(--muted);font-size:12px;}
+
+/* ABOUT */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.about-box{background:#fff;border:1px solid var(--line);border-radius:18px;padding:28px;}
+.about-box h3{margin-bottom:9px;}
+.about-box p{color:var(--muted);font-size:13px;}
+
+/* FOOTER */
+footer{background:var(--dark);color:#fff;padding:55px 0 25px;}
+.footer-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:35px;}
+.footer-title{font-weight:900;margin-bottom:12px;}
+footer p,footer a{color:#aab8b0;font-size:12px;}
+footer a{display:block;margin:7px 0;}
+.footer-bottom{border-top:1px solid #ffffff12;margin-top:40px;padding-top:20px;color:#819189;font-size:10px;}
+/* FOOTER PAN CONTROLS */
+.pan-controls{margin-top:28px;padding:18px 20px;border:1px solid #ffffff18;border-radius:14px;background:#ffffff08;display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.pan-control{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;min-width:0;}
+.pan-control label{margin:0;color:#d4dfd8;font-size:11px;white-space:nowrap;}
+.pan-control input[type="range"]{width:100%;margin:0;padding:0;accent-color:#7dc69a;cursor:pointer;}
+.pan-control output{font-size:10px;color:#aab8b0;min-width:42px;text-align:right;font-variant-numeric:tabular-nums;}
+.pan-hint{grid-column:1/-1;color:#819189;font-size:10px;}
+.pan-draggable{cursor:grab;touch-action:pan-y;}
+.pan-draggable.is-panning{cursor:grabbing;user-select:none;}
+@media(max-width:560px){.pan-controls{grid-template-columns:1fr;gap:14px;}.pan-hint{grid-column:auto;}}
+
+
+/* MODAL */
+.modal{display:none;position:fixed;inset:0;z-index:2000;background:rgba(8,18,13,.65);padding:20px;align-items:center;justify-content:center;}
+.modal.open{display:flex;}
+.modal-box{width:min(620px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:20px;padding:28px;position:relative;}
+.modal-close{position:absolute;right:20px;top:15px;border:0;background:none;font-size:25px;}
+
+/* RESPONSIVE */
+@media(max-width:1050px){.desktop-menu{gap:12px;}.process-grid{grid-template-columns:repeat(3,1fr);}.partner-options{grid-template-columns:1fr 1fr;}.footer-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:850px){.desktop-menu{display:none;}.mobile-toggle{display:block;}.hero-grid,.form-layout,.impact-grid,.about-grid{grid-template-columns:1fr;}.cards,.awareness-grid{grid-template-columns:1fr 1fr;}.quick-grid{grid-template-columns:1fr 1fr;}.stats{grid-template-columns:1fr 1fr;}.security-box{grid-template-columns:1fr;}}
+@media(max-width:560px){.container{width:min(100% - 28px,1200px);}.section{padding:65px 0;}.hero{padding:60px 0;}.hero h1{font-size:46px;}.hero-text{font-size:16px;}.cards,.awareness-grid,.stats,.partner-options,.quick-grid,.process-grid{grid-template-columns:1fr;}.form-row{grid-template-columns:1fr;gap:0;}.track-form{flex-direction:column;}.footer-grid{grid-template-columns:1fr;}.trace-card{padding:22px;}}
+</style>
+</head>
+
+<body>
+
+<!-- ================= NAVIGATION ================= -->
+<nav class="navbar">
+<div class="container nav-inner">
+<a href="#home" class="logo">PROJECT E-<span>REVIRESCO</span></a>
+<div class="desktop-menu">
+<a href="#home">Home</a>
+<div class="menu-dropdown"><button>Services</button><div class="dropdown-content"><a href="#submit">Submit E-Waste</a><a href="#collection">Request Collection</a><a href="#repair">Repair & Refurbishment</a><a href="#security">Data Security</a></div></div>
+<div class="menu-dropdown"><button>Traceability</button><div class="dropdown-content"><a href="#track">Track My E-Waste</a><a href="#process">Our Process</a><a href="#locations">Collection Points</a></div></div>
+<a href="#partners">Partners</a>
+<a href="/articles/">Articles</a>
+<a href="#awareness">Awareness</a>
+<a href="#impact">Impact</a>
+<a href="#about">About</a>
+<a href="#contact">Contact</a>
+<a href="#submit" class="nav-cta">Submit E-Waste</a>
+</div>
+<button class="mobile-toggle" onclick="toggleMobileMenu()">☰</button>
+</div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+<a href="#home" onclick="closeMobileMenu()">Home</a>
+<button onclick="toggleSubmenu('servicesMenu')">Services</button>
+<div class="mobile-submenu" id="servicesMenu"><a href="#submit" onclick="closeMobileMenu()">Submit E-Waste</a><a href="#collection" onclick="closeMobileMenu()">Request Collection</a><a href="#repair" onclick="closeMobileMenu()">Repair & Refurbishment</a><a href="#security" onclick="closeMobileMenu()">Data Security</a></div>
+<button onclick="toggleSubmenu('traceMenu')">Traceability</button>
+<div class="mobile-submenu" id="traceMenu"><a href="#track" onclick="closeMobileMenu()">Track My E-Waste</a><a href="#process" onclick="closeMobileMenu()">Our Process</a><a href="#locations" onclick="closeMobileMenu()">Collection Points</a></div>
+<a href="#partners" onclick="closeMobileMenu()">Our Partners</a>
+<a href="#partner-form" onclick="closeMobileMenu()">Become a Partner</a>
+<a href="#awareness" onclick="closeMobileMenu()">Awareness</a>
+<a href="/articles/" onclick="closeMobileMenu()">Articles</a>
+<a href="#impact" onclick="closeMobileMenu()">Impact</a>
+<a href="#about" onclick="closeMobileMenu()">About E-REVIRESCO</a>
+<a href="#contact" onclick="closeMobileMenu()">Contact</a>
+<a href="#submit" onclick="closeMobileMenu()">Submit E-Waste</a>
+</div>
+
+<!-- ================= HERO ================= -->
+<header class="hero" id="home">
+<div class="container hero-grid">
+<div>
+<div class="eyebrow">Recover • Reuse • Restore</div>
+<h1>Don't just discard it.<br><span>Know what happens.</span></h1>
+<p class="hero-text">PROJECT E-REVIRESCO is a technology-enabled e-waste collection, coordination and traceability platform that gives people and organisations a digital channel for unwanted electronics, coordinates responsible collection and connects each item with the appropriate downstream partner.</p>
+<div class="hero-actions">
+<a href="#submit" class="btn green">Submit E-Waste</a>
+<a href="#track" class="btn">Track My E-Waste</a>
+</div>
+</div>
+<div class="trace-card">
+<div class="trace-header">
+<div><div class="trace-label">Live Trace Record</div><div class="trace-id">ER-2026-000127</div></div>
+<div class="trace-status">TRACEABLE</div>
+</div>
+<div class="trace-event"><div class="trace-number">1</div><div><strong>Registered</strong><small>Device received and assigned a unique digital identity</small></div></div>
+<div class="trace-event"><div class="trace-number">2</div><div><strong>Data Security Assessment</strong><small>Data-bearing status and security requirements recorded</small></div></div>
+<div class="trace-event"><div class="trace-number">3</div><div><strong>Technical Assessment</strong><small>Condition and suitable recovery pathway determined</small></div></div>
+<div class="trace-event"><div class="trace-number">4</div><div><strong>Partner Assigned</strong><small>Appropriate downstream partner selected</small></div></div>
+<div class="trace-event"><div class="trace-number">5</div><div><strong>Outcome Recorded</strong><small>Final processing and destination documented</small></div></div>
+</div>
+</div>
+</header>
+
+<!-- ================= QUICK ACTIONS ================= -->
+<div class="container quick-actions">
+<div class="quick-grid">
+<a href="#submit" class="quick-card"><strong>Submit E-Waste</strong><p>Register an unwanted electronic device.</p></a>
+<a href="#collection" class="quick-card"><strong>Request Collection</strong><p>Arrange collection from your location.</p></a>
+<a href="#track" class="quick-card"><strong>Track My E-Waste</strong><p>Check the recorded status of an item.</p></a>
+<a href="#locations" class="quick-card"><strong>Find Collection Point</strong><p>Locate an available E-REVIRESCO point.</p></a>
+</div>
+</div>
+
+<!-- ================= HOW IT WORKS ================= -->
+<section class="section" id="process">
+<div class="container">
+<div class="section-head">
+<div class="eyebrow">The Platform</div>
+<h2>A digital channel from submission to outcome.</h2>
+<p>E-REVIRESCO coordinates collection, registration, assessment, partner allocation and documentation while keeping the item's journey traceable.</p>
+</div>
+<div class="cards">
+<div class="card"><div class="card-number">01</div><h3>Submit</h3><p>Anyone can submit unwanted electronics through the platform, including households, businesses and institutions.</p></div>
+<div class="card"><div class="card-number">02</div><h3>Register</h3><p>The item receives a unique identity and its source, condition, device information and supporting records are captured.</p></div>
+<div class="card"><div class="card-number">03</div><h3>Assess</h3><p>Technical condition, data-bearing status and possible recovery pathways are evaluated.</p></div>
+<div class="card"><div class="card-number">04</div><h3>Connect</h3><p>The system identifies an appropriate repair, refurbishment, recovery, recycling or specialist partner.</p></div>
+<div class="card"><div class="card-number">05</div><h3>Track</h3><p>Important handovers and processing events are recorded against the item's digital identity.</p></div>
+<div class="card"><div class="card-number">06</div><h3>Report</h3><p>The final outcome can be documented for the owner, institution, partner and E-REVIRESCO records.</p></div>
+</div>
+</div>
+</section>
+
+<!-- ================= PROCESS ================= -->
+<section class="section dark-section">
+<div class="container">
+<div class="section-head">
+<div class="eyebrow">Digital Chain of Custody</div>
+<h2>Every important handover gets a record.</h2>
+<p>The platform is designed to create an auditable record of the device's movement and processing.</p>
+</div>
+<div class="process-grid">
+<div class="process-card"><span>01</span><strong>Submitted</strong></div>
+<div class="process-card"><span>02</span><strong>Collection Scheduled</strong></div>
+<div class="process-card"><span>03</span><strong>Collected</strong></div>
+<div class="process-card"><span>04</span><strong>Registered</strong></div>
+<div class="process-card"><span>05</span><strong>Assessed</strong></div>
+<div class="process-card"><span>06</span><strong>Data Security Checked</strong></div>
+<div class="process-card"><span>07</span><strong>Partner Assigned</strong></div>
+<div class="process-card"><span>08</span><strong>Partner Received</strong></div>
+<div class="process-card"><span>09</span><strong>Processing Recorded</strong></div>
+<div class="process-card"><span>10</span><strong>Outcome Documented</strong></div>
+<div class="process-card"><span>11</span><strong>Report Generated</strong></div>
+<div class="process-card"><span>12</span><strong>Case Closed</strong></div>
+</div>
+</div>
+</section>
+
+<!-- ================= TRACK ================= -->
+<section class="section track-area" id="track">
+<div class="container">
+<div class="section-head">
+<div class="eyebrow">Track My E-Waste</div>
+<h2>Where is my device now?</h2>
+<p>Enter the E-REVIRESCO tracking ID to view the recorded journey of a submitted item.</p>
+</div>
+<div class="track-box">
+<form class="track-form" onsubmit="trackItem(event)">
+<input id="trackingInput" placeholder="Example: ER-2026-000127" required>
+<button class="btn green">Track Item</button>
+</form>
+<div id="trackingResult" style="margin-top:20px"></div>
+</div>
+</div>
+</section>
+
+<!-- ================= SUBMIT ================= -->
+<section class="section" id="submit">
+<div class="container form-layout">
+<div class="section-head">
+<div class="eyebrow">Submit E-Waste</div>
+<h2>Give your old technology a documented pathway.</h2>
+<p>Submit information about an unwanted electronic item. In the full platform, this information would initiate the collection and traceability process.</p>
+<br>
+<p>Supported examples include computers, laptops, phones, tablets, printers, network equipment and other electronic devices.</p>
+</div>
+<form class="form-card" onsubmit="submitWaste(event)">
+<div class="form-row">
+<div><label>Name</label><input id="submitName" type="text" placeholder="Your name" required></div>
+<div><label>Phone / Email</label><input type="text" placeholder="Contact details" required></div>
+</div>
+<div class="form-row">
+<div><label>Device Type</label><select required><option value="">Select device</option><option>Desktop Computer</option><option>Laptop</option><option>Phone</option><option>Tablet</option><option>Printer</option><option>Monitor</option><option>Router / Network Equipment</option><option>Server</option><option>Other Electronics</option></select></div>
+<div><label>Quantity</label><input type="number" min="1" placeholder="Number of items" required></div>
+</div>
+<label>Condition</label>
+<select required><option>Not working</option><option>Partially working</option><option>Working but unwanted</option><option>Unknown</option></select>
+<label>Location</label>
+<input placeholder="Town / area" required>
+<label>Additional information</label>
+<textarea placeholder="Describe the device or collection requirements"></textarea>
+<button class="btn green">Submit E-Waste</button>
+<div id="submitMessage" class="form-message"></div>
+</form>
+</div>
+</section>
+
+<!-- ================= COLLECTION ================= -->
+<section class="section" id="collection">
+<div class="container">
+<div class="section-head">
+<div class="eyebrow">Collection</div>
+<h2>Request a collection.</h2>
+<p>Collection can be coordinated for households, businesses and institutions depending on location, quantity and operational availability.</p>
+</div>
+<div class="cards">
+<div class="card"><div class="card-number">HOUSEHOLDS</div><h3>Small quantities</h3><p>Request collection for unwanted phones, computers, appliances and other electronics.</p><br><a href="#submit" class="btn green">Request Collection</a></div>
+<div class="card"><div class="card-number">BUSINESSES</div><h3>Bulk equipment</h3><p>Organisations can submit multiple devices and maintain records of collected equipment.</p><br><a href="#submit" class="btn green">Start Institutional Request</a></div>
+<div class="card"><div class="card-number">INSTITUTIONS</div><h3>Controlled disposal</h3><p>Institutional collections can include inventory records, data-security documentation and outcome reporting.</p><br><a href="#submit" class="btn green">Request Institutional Service</a></div>
+</div>
+</div>
+</section>
+
+<!-- ================= COLLECTION POINTS ================= -->
+<section class="section" id="locations">
+<div class="container">
+<div class="section-head">
+<div class="eyebrow">Collection Network</div>
+<h2>Find a collection point.</h2>
+<p>The platform can maintain a directory of verified collection points and their accepted equipment.</p>
+</div>
+<div class="cards">
+<div class="card location-card"><div><h3>NEXUS TECH HUB</h3><p>Proposed initial E-REVIRESCO collection centre.</p></div><div class="location-status">INITIAL</div></div>
+<div class="card location-card"><div><h3>Partner Collection Points</h3><p>Approved partner locations can be listed according to area, capacity and accepted equipment.</p></div><div class="location-status">NETWORK</div></div>
+<div class="card location-card"><div><h3>Institutional Collection</h3><p>Large organisations can arrange scheduled collection directly.</p></div><div class="location-status">REQUEST</div></div>
+</div>
+</div>
+</section>
+
+<!-- ================= DATA SECURITY ================= -->
+<section class="section" id="security">
+<div class="container">
+<div class="section-head">
+<div class="eyebrow">Data Security</div>
+<h2>Data security is part of the recovery process.</h2>
+<p>Data-bearing equipment must be treated differently from ordinary electronic waste. The platform records the security status and the action taken.</p>
+</div>
+<div class="security-box">
+<div class="security-item"><h3>Identify</h3><p>Identify HDDs, SSDs, phones, tablets, memory cards, USB storage and other components that may contain data.</p></div>
+<div class="security-item"><h3>Secure Custody</h3><p>Data-bearing equipment can be recorded and held securely while the appropriate security procedure is determined.</p></div>
+<div class="security-item"><h3>Sanitise</h3><p>Use an appropriate verified sanitisation or destruction method depending on the storage medium, condition and required level of assurance.</p></div>
+<div class="security-item"><h3>Verify & Document</h3><p>Record the method, operator, date, result, verification and final destination. Failed procedures require further action.</p></div>
+</div>
+</div>
+</section>
+
+<!-- ================= REPAIR ================= -->
+<section class="section" id="repair">
+<div class="container">
+<div class="section-head">
+<div class="eyebrow">Repair & Technical Services</div>
+<h2>Not everything belongs in recycling.</h2>
+<p>Where an item has recoverable value, E-REVIRESCO can coordinate repair or refurbishment directly within its competence or through vetted technical partners.</p>
+</div>
+<div class="cards">
+<div class="card"><div class="card-number">SERVICE</div><h3>Repair</h3><p>Devices may be repaired for owners at a fee where the service is technically and economically appropriate.</p></div>
+<div class="card"><div class="card-number">PARTNER</div><h3>Specialist Repair</h3><p>Complex repairs can be referred to suitable technical partners through a documented partner relationship.</p></div>
+<div class="card"><div class="card-number">RECOVERY</div><h3>Component Recovery</h3><p>Useful components can be recovered where appropriate rather than treating every device as material for immediate recycling.</p></div>
+</div>
+</div>
+</section>
+
+<!-- ================= PARTNERS ================= -->
+<section class="section" id="partners">
+<div class="container">
+<div class="section-head">
+<div class="eyebrow">Partnership Is Our Model</div>
+<h2>E-REVIRESCO coordinates the network.</h2>
+<p>The platform connects e-waste sources with organisations that have the appropriate technical capability, equipment, expertise or downstream processing capacity.</p>
+</div>
+<div class="cards">
+<div class="card"><h3>Repair Shops</h3><p>Verified repair shops can receive relevant device referrals, record their assessment findings and recommend the next suitable recovery step.</p></div>
+<div class="card"><h3>Refurbishment Businesses</h3><p>Partners can restore suitable equipment for continued use or responsible resale.</p></div>
+<div class="card"><h3>Technology Businesses</h3><p>Technology shops and businesses can participate in collection, refurbishment, resale and component recovery.</p></div>
+<div class="card"><h3>Data Security Specialists</h3><p>Competent specialists can support secure sanitisation, verification and documentation.</p></div>
+<div class="card"><h3>Formal Recyclers</h3><p>Material that requires formal recycling can be routed to appropriate downstream handlers.</p></div>
+<div class="card"><h3>Institutions & Businesses</h3><p>Organisations can become recurring sources of equipment and receive documented collection and outcome records.</p></div>
+</div>
+</div>
+</section>
+
+<!-- ================= PARTNER APPLICATION ================= -->
+<section class="section track-area" id="partner-form">
+<div class="container form-layout">
+<div class="section-head">
+<div class="eyebrow">Become a Partner</div>
+<h2>Join the E-REVIRESCO network.</h2>
+<p>Partners can register their capabilities so that appropriate items can be assigned through the platform.</p>
+</div>
+<form class="form-card" onsubmit="partnerSubmit(event)">
+<label>Organisation / Business Name</label><input type="text" required placeholder="Business or organisation">
+<label>Partner Type</label><select required><option value="">Select category</option><option>Repair</option><option>Refurbishment</option><option>Data Security</option><option>Recycling</option><option>Material Recovery</option><option>Specialist Handling</option><option>Institutional Source</option></select>
+<label>Location</label><input type="text" required placeholder="Town / district">
+<label>Capabilities</label><textarea placeholder="What equipment or services can you handle?"></textarea>
+<button class="btn green">Apply as Partner</button>
+<div id="partnerMessage" class="form-message"></div>
+</form>
+</div>
+</section>
+
+<!-- ================= AWARENESS ================= -->
+<section class="section awareness" id="awareness">
+<div class="container">
+<div class="section-head">
+<div class="eyebrow">Awareness & Intelligence</div>
+<h2>Understand the problem behind the platform.</h2>
+<p>A public knowledge section covering global e-waste evidence, Uganda's response, practical guidance and the wider ecosystem.</p>
+</div>
+<div class="stats">
+<div class="stat"><strong>62 Mt</strong><span>Global e-waste generated in 2022.</span></div>
+<div class="stat"><strong>22.3%</strong><span>Documented collection and recycling in 2022.</span></div>
+<div class="stat"><strong>82 Mt</strong><span>Projected global e-waste by 2030.</span></div>
+<div class="stat"><strong>41M kg</strong><span>Approximate Uganda e-waste generation cited by the Ministry.</span></div>
+</div>
+</div>
+</section>
+
+<!-- ================= ARTICLES ================= -->
+<section class="section" id="articles">
+<div class="container">
+<div class="section-head">
+<div class="eyebrow">E-REVIRESCO Journal</div>
+<h2>Articles, guides and e-waste intelligence.</h2>
+<p>Read practical e-waste guidance, public awareness articles, Uganda updates and news about responsible electronics recovery.</p>
+</div>
+<div class="awareness-grid">
+{% for article in recent_articles %}
+<div class="article-card">
+<div class="tag">{{ article.category }}</div>
+<h3>{{ article.title }}</h3>
+<p>{{ article.summary }}</p><br>
+<a class="btn light" href="{% url 'article_detail' article.slug %}">Read Article</a>
+</div>
+{% empty %}
+<div class="article-card"><div class="tag">Public Guide</div><h3>What happens to e-waste?</h3><p>Learn why old electronics should be assessed and sent through responsible recovery pathways.</p><br><a class="btn light" href="/articles/">Explore Articles</a></div>
+<div class="article-card"><div class="tag">Data Security</div><h3>Protect your data before disposal</h3><p>Understand the importance of securely handling phones, computers and storage devices.</p><br><a class="btn light" href="/articles/">Explore Articles</a></div>
+<div class="article-card"><div class="tag">Uganda</div><h3>Building e-waste awareness</h3><p>Find public information and project updates about collection, repair, reuse and recycling.</p><br><a class="btn light" href="/articles/">Explore Articles</a></div>
+{% endfor %}
+</div>
+<div style="margin-top:28px"><a class="btn green" href="/articles/">Visit All Articles</a></div>
+</div>
+</section>
+
+<!-- ================= IMPACT ================= -->
+<section class="section" id="impact">
+<div class="container">
+<div class="section-head">
+<div class="eyebrow">Impact Dashboard</div>
+<h2>Measure what happens after collection.</h2>
+<p>The platform can turn individual device records into measurable environmental, economic and operational impact data.</p>
+</div>
+<div class="impact-grid">
+<div class="impact-panel">
+<div class="eyebrow">Pilot Devices</div>
+<div class="impact-number">50</div>
+<p>Illustrative initial pilot target.</p>
+<div class="progress"><span style="width:68%"></span></div>
+<small>Pilot tracking dashboard</small>
+</div>
+<div class="impact-panel">
+<div class="eyebrow">Outcomes</div>
+<div class="cards" style="grid-template-columns:1fr 1fr;margin-top:15px">
+<div class="card" style="padding:15px"><strong style="color:var(--green)">Reuse</strong><p>Devices returned to productive use.</p></div>
+<div class="card" style="padding:15px"><strong style="color:var(--green)">Recovery</strong><p>Components and materials recovered.</p></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ================= ABOUT ================= -->
+<section class="section" id="about">
+<div class="container">
+<div class="section-head">
+<div class="eyebrow">About E-REVIRESCO</div>
+<h2>Technology that gives discarded technology a documented pathway.</h2>
+<p>PROJECT E-REVIRESCO focuses on the coordination problem: helping people and organisations submit unwanted electronics, organising responsible collection and connecting each item with an appropriate downstream partner.</p>
+</div>
+<div class="about-grid">
+<div class="about-box"><h3>Mission</h3><p>To build an accessible, technology-enabled system for responsible e-waste collection, coordination, traceability and recovery, while connecting communities, institutions, technical businesses and downstream partners.</p></div>
+<div class="about-box"><h3>Vision</h3><p>A connected recovery ecosystem in which unwanted electronics can be submitted through a trusted digital channel and their journey from collection to final outcome can be responsibly documented.</p></div>
+<div class="about-box"><h3>Launch Focus</h3><p>Western Uganda, beginning with an operational pilot and a proposed initial collection centre at NEXUS TECH HUB.</p></div>
+<div class="about-box"><h3>Institutional Partnership</h3><p>Kabale University is considered as a proposed institutional partner for supervision, recognition, collaboration and access to relevant funding or innovation opportunities.</p></div>
+</div>
+</div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section class="section track-area" id="contact">
+<div class="container">
+<div class="section-head">
+<div class="eyebrow">Contact</div>
+<h2>Connect with PROJECT E-REVIRESCO.</h2>
+<p>For collection enquiries, partnerships, institutional services, technical collaboration or project information.</p>
+</div>
+<div class="cards">
+<div class="card"><div class="card-number">EMAIL</div><h3>ereviresco@gmail.com</h3><p>General enquiries and partnership communication.</p></div>
+<div class="card"><div class="card-number">PHONE</div><h3>+256 750 068 917</h3><p>Collection and project enquiries.</p></div>
+<div class="card"><div class="card-number">LOCATION</div><h3>Western Uganda</h3><p>Uganda. Launch operations are intended to begin in Western Uganda.</p></div>
+</div>
+</div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+<div class="container">
+<div class="footer-grid">
+<div><div class="footer-title">PROJECT E-REVIRESCO</div><p>Recover • Reuse • Restore</p><p>Technology-enabled e-waste collection, coordination and traceability.</p></div>
+<div><div class="footer-title">Platform</div><a href="#submit">Submit E-Waste</a><a href="#collection">Request Collection</a><a href="#track">Track My E-Waste</a><a href="#locations">Collection Points</a></div>
+<div><div class="footer-title">Network</div><a href="#partners">Our Partners</a><a href="#partner-form">Become a Partner</a><a href="#security">Data Security</a><a href="#impact">Impact</a></div>
+<div><div class="footer-title">Knowledge</div><a href="#awareness">Awareness</a><a href="#articles">Articles</a><a href="#about">About</a><a href="#contact">Contact</a></div>
+</div>
+<section class="pan-controls" aria-label="Page pan controls">
+<div class="pan-control">
+<label for="panX">Pan X</label>
+<input id="panX" type="range" min="-240" max="240" value="0" step="1" aria-label="Pan horizontally">
+<output id="panXValue" for="panX">0%</output>
+</div>
+<div class="pan-control">
+<label for="panY">Pan Y</label>
+<input id="panY" type="range" min="0" max="100" value="0" step="1" aria-label="Pan vertically">
+<output id="panYValue" for="panY">0%</output>
+</div>
+<p class="pan-hint">Use the sliders or drag the page background to pan. Interactive elements remain usable.</p>
+</section>
+<div class="footer-bottom">© 2026 PROJECT E-REVIRESCO. Recover • Reuse • Restore.</div>
+</div>
+</footer>
+
+<script>
+/* FOOTER PAN CONTROLS + DRAG TO PAN */
+(function initPanControls(){
+    const panX = document.getElementById('panX');
+    const panY = document.getElementById('panY');
+    const panXValue = document.getElementById('panXValue');
+    const panYValue = document.getElementById('panYValue');
+    if (!panX || !panY) return;
+
+    // Pan the main page content horizontally without moving the navigation or footer.
+    const panTargets = Array.from(document.body.children).filter(element =>
+        !element.matches('nav, footer, script, .mobile-menu, .modal')
+    );
+    let horizontalOffset = 0;
+
+    function applyHorizontalPan(value) {
+        horizontalOffset = Number(value) || 0;
+        panTargets.forEach(element => {
+            element.style.translate = horizontalOffset + 'px 0';
+        });
+        panXValue.textContent = (horizontalOffset > 0 ? '+' : '') + horizontalOffset + 'px';
+    }
+
+    function updatePanRanges(){
+        const maxY = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+        const maxPanX = Math.min(240, Math.round(window.innerWidth * 0.2));
+        panX.min = String(-maxPanX);
+        panX.max = String(maxPanX);
+        panX.value = String(Math.max(-maxPanX, Math.min(maxPanX, horizontalOffset)));
+        panY.value = String(maxY ? Math.round((window.scrollY / maxY) * 100) : 0);
+        panXValue.textContent = (horizontalOffset > 0 ? '+' : '') + horizontalOffset + 'px';
+        panYValue.textContent = panY.value + '%';
+    }
+
+    panX.addEventListener('input', () => applyHorizontalPan(panX.value));
+    panY.addEventListener('input', () => {
+        const maxY = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+        window.scrollTo({left:window.scrollX, top:maxY * Number(panY.value) / 100, behavior:'auto'});
+        panYValue.textContent = panY.value + '%';
+    });
+    window.addEventListener('scroll', () => {
+        const maxY = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+        panY.value = String(maxY ? Math.round((window.scrollY / maxY) * 100) : 0);
+        panYValue.textContent = panY.value + '%';
+    }, {passive:true});
+    window.addEventListener('resize', updatePanRanges);
+    if ('ResizeObserver' in window) new ResizeObserver(updatePanRanges).observe(document.body);
+    updatePanRanges();
+
+    let drag = null;
+    document.addEventListener('pointerdown', event => {
+        if (event.button !== 0 || event.target.closest('a,button,input,select,textarea,label,form,footer,.modal,.navbar,.mobile-menu,[contenteditable="true"]')) return;
+        drag = {id:event.pointerId, x:event.clientX, y:event.clientY, offset:horizontalOffset, sy:window.scrollY, moved:false};
+    });
+    document.addEventListener('pointermove', event => {
+        if (!drag || event.pointerId !== drag.id) return;
+        const dx = event.clientX - drag.x;
+        const dy = event.clientY - drag.y;
+        if (!drag.moved && Math.hypot(dx,dy) < 5) return;
+        drag.moved = true;
+        document.body.classList.add('is-panning');
+        const maxPanX = Math.min(240, Math.round(window.innerWidth * 0.2));
+        applyHorizontalPan(Math.max(-maxPanX, Math.min(maxPanX, drag.offset + dx)));
+        window.scrollTo({left:window.scrollX, top:Math.max(0, drag.sy - dy), behavior:'auto'});
+        panX.value = String(horizontalOffset);
+        event.preventDefault();
+    }, {passive:false});
+    function endDrag(event){
+        if (!drag || (event && event.pointerId !== drag.id)) return;
+        drag = null;
+        document.body.classList.remove('is-panning');
+    }
+    document.addEventListener('pointerup', endDrag);
+    document.addEventListener('pointercancel', endDrag);
+})();
+ 
+/* MOBILE MENU */
+function toggleMobileMenu(){document.getElementById("mobileMenu").classList.toggle("open");}
+function closeMobileMenu(){document.getElementById("mobileMenu").classList.remove("open");}
+function toggleSubmenu(id){document.getElementById(id).classList.toggle("open");}
+
+/* TRACKING (CONNECTED TO DJANGO) */
+async function trackItem(event) {
+    event.preventDefault();
+    const input = document.getElementById("trackingInput").value.trim().toUpperCase();
+    const resultDiv = document.getElementById("trackingResult");
+    resultDiv.innerHTML = '<p style="font-size:13px; color:var(--muted);">Searching database...</p>';
+
+    try {
+        const response = await fetch(`/api/track/?tracking_id=${input}`);
+        const result = await response.json();
+
+        if (result.status === 'success') {
+            const data = result.data;
+            const sanitizationStatus = data.data_sanitized ? 
+                '<span style="color:var(--green)">✔ Verified & Sanitized</span>' : 
+                '<span style="color:#c59b45">⏳ Pending Sanitization</span>';
+
+            resultDiv.innerHTML = `
+                <div style="background:var(--green-soft); border:1px solid #cde4d5; border-radius:12px; padding:18px;">
+                    <strong style="color:var(--green)">Item Found in Database</strong>
+                    <p style="font-size:13px; margin-top:5px;">Device: ${data.device_type}</p>
+                    <div style="margin-top:14px; display:grid; gap:8px; font-size:12px;">
+                        <div><strong>Tracking ID:</strong> ${data.tracking_id}</div>
+                        <div><strong>Condition:</strong> ${data.condition}</div>
+                        <div><strong>Current Status:</strong> ${data.current_status}</div>
+                        <div><strong>Data Security:</strong> ${sanitizationStatus}</div>
+                    </div>
+                </div>`;
+        } else {
+            resultDiv.innerHTML = `<div style="background:#fff4f4; border:1px solid #efd0d0; border-radius:12px; padding:15px; font-size:12px;">No record found for <strong>${input}</strong>.<br><br>Please check the ID and try again.</div>`;
+        }
+    } catch (error) {
+        resultDiv.innerHTML = `<div style="background:#fff4f4; border:1px solid #efd0d0; border-radius:12px; padding:15px; font-size:12px;">Error connecting to server. Please try again.</div>`;
+    }
+}
+
+/* SUBMIT WASTE (CONNECTED TO DJANGO) */
+async function submitWaste(event) {
+    event.preventDefault();
+    const submitBtn = event.target.querySelector('button');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = "Processing...";
+    submitBtn.disabled = true;
+
+    const formData = {
+        submitter_name: document.getElementById("submitName").value.trim(),
+        contact_info: event.target.querySelector('input[placeholder="Contact details"]').value.trim(),
+        device_type: event.target.querySelector('select').value,
+        quantity: parseInt(event.target.querySelector('input[type="number"]').value),
+        condition: event.target.querySelectorAll('select')[1].value,
+        location: event.target.querySelector('input[placeholder="Town / area"]').value.trim(),
+        additional_info: event.target.querySelector('textarea').value.trim()
+    };
+
+    try {
+        const response = await fetch('/api/submit/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData)
+        });
+
+        const result = await response.json();
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+
+        if (result.status === 'success') {
+            document.getElementById("submitMessage").innerHTML = `
+                <strong>Success!</strong> Your e-waste has been registered in our database.<br>
+                Your unique tracking ID is: <strong style="color:var(--dark); font-size:14px;">${result.tracking_id}</strong><br>
+                <small>Save this ID to track your device's journey.</small>
+            `;
+            document.getElementById("submitMessage").style.color = "var(--green)";
+            event.target.reset();
+        } else {
+            document.getElementById("submitMessage").textContent = "Error submitting. Please try again.";
+            document.getElementById("submitMessage").style.color = "var(--danger)";
+        }
+    } catch (error) {
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+        document.getElementById("submitMessage").textContent = "Error connecting to server. Please try again.";
+        document.getElementById("submitMessage").style.color = "var(--danger)";
+    }
+}
+
+/* PARTNER APPLICATION */
+function partnerSubmit(event) {
+    event.preventDefault();
+    document.getElementById("partnerMessage").textContent = "Application received! Our team will review your capabilities and contact you shortly.";
+    document.getElementById("partnerMessage").style.color = "var(--green)";
+    event.target.reset();
+}
+
+</script>
+</body>
+</html>
